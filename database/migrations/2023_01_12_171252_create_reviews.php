@@ -14,12 +14,11 @@ class CreateReviews extends Migration
     public function up()
     {
         Schema::create('reviews', function (Blueprint $table) {
-            $table->increment('id')->primary();
-            $table->integer('product_id')->unsigned()->index();
+            $table->id();
             $table->integer('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->string('customer');
-            $table->text('review');
-            $table->integer('star');
+            $table->string('customer')->nullable();
+            $table->text('review')->nullable();
+            $table->integer('star')->default(0);
             $table->timestamps();
         });
     }
