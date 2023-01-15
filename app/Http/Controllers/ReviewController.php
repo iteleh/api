@@ -6,6 +6,8 @@ use App\Models\review;
 use Illuminate\Http\Request;
 use App\Models\product;
 use App\Http\Resources\ReviewResource;
+use App\Http\Requests\ReviewRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReviewController extends Controller
 {
@@ -36,9 +38,21 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request, product $product)
     {
-        //
+        /**$review = new review();
+        $review->customer = $request->customer;
+        $review->review = $request->review;
+        $review->star = $request->star;
+        $review->product_id = $product->id;
+        $review->save();*/
+
+        $review = new Review($request->all());
+        $product->reviews()->save($review);
+                
+        return response([
+            'data' => new ReviewResource($review),
+        ], response::HTTP_CREATED);
     }
 
     /**
