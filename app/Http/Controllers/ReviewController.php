@@ -84,9 +84,13 @@ class ReviewController extends Controller
      * @param  \App\Models\review  $review
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, review $review)
+    public function update(Request $request, product $product, review $review)
     {
-        //
+        $review->update($request->all());
+
+        return response([
+            'data' => new ReviewResource($review),
+        ], response::HTTP_CREATED);
     }
 
     /**
