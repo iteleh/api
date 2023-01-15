@@ -2,11 +2,17 @@
 
 namespace App\Exceptions;
 
+
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class Handler extends ExceptionHandler
 {
+    
+
+    
     /**
      * A list of the exception types that are not reported.
      *
@@ -14,6 +20,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         //
+        
     ];
 
     /**
@@ -27,15 +34,26 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    
     /**
      * Register the exception handling callbacks for the application.
      *
      * @return void
      */
     public function register()
-    {
-        $this->reportable(function (Throwable $e) {
-            //
+    {  
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Incorrect route'], 404);
+            }
+        });
+
+
+        $this->renderable(function (ModelNotFoundException $e, $request) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Product not found'], 404);
+            }
         });
     }
+
 }
